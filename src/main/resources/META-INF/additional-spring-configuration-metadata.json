@@ -1,0 +1,119 @@
+{
+  "properties": [
+    {
+      "name": "app.pay.alipay.appid",
+      "type": "java.lang.String",
+      "description": "支付宝应用AppId."
+    },
+    {
+      "name": "app.pay.alipay.app-private-key",
+      "type": "java.lang.String",
+      "description": "支付宝应用私钥."
+    },
+    {
+      "name": "app.pay.alipay.app-public-key",
+      "type": "java.lang.String",
+      "description": "支付宝应用公钥."
+    },
+    {
+      "name": "app.pay.alipay.alipay-public-key",
+      "type": "java.lang.String",
+      "description": "支付宝公钥."
+    },
+    {
+      "name": "app.pay.alipay.pay-notify-url",
+      "type": "java.lang.String",
+      "description": "支付宝通知地址."
+    },
+    {
+      "name": "app.pay.alipay.pay-return-url",
+      "type": "java.lang.String",
+      "description": "支付宝支付回调地址."
+    },
+    {
+      "name": "app.pay.alipay.base-domain",
+      "type": "java.lang.String",
+      "description": "支付宝基础域名。形如https://pay.abasecode.com。注意必须是https."
+    },
+    {
+      "name": "app.pay.alipay.encrypt-key",
+      "type": "java.lang.String",
+      "description": "支付宝加密秘钥."
+    },
+    {
+      "name": "app.pay.alipay.encrypt-type",
+      "type": "java.lang.String",
+      "description": "支付宝加密类型，比如AES."
+    },
+    {
+      "name": "app.pay.wechat.app-appid",
+      "type": "java.lang.String",
+      "description": "app支付appid."
+    },
+    {
+      "name": "app.pay.wechat.mp-appid",
+      "type": "java.lang.String",
+      "description": "公众号appid."
+    },
+    {
+      "name": "app.pay.wechat.micro-appid",
+      "type": "java.lang.String",
+      "description": "小程序appid."
+    },
+    {
+      "name": "app.pay.wechat.app-secret",
+      "type": "java.lang.String",
+      "description": "App支付秘钥."
+    },
+    {
+      "name": "app.pay.wechat.mp-secret",
+      "type": "java.lang.String",
+      "description": "公众号支付秘钥."
+    },
+    {
+      "name": "app.pay.wechat.micro-secret",
+      "type": "java.lang.String",
+      "description": "小程序支付秘钥."
+    },
+    {
+      "name": "app.pay.wechat.mchid",
+      "type": "java.lang.String",
+      "description": "微信商户号."
+    },
+    {
+      "name": "app.pay.wechat.cert-path",
+      "type": "java.lang.String",
+      "description": "微信商户号证书路径."
+    },
+    {
+      "name": "app.pay.wechat.cert-key",
+      "type": "java.lang.String",
+      "description": "微信商户号证书key."
+    },
+    {
+      "name": "app.pay.wechat.v3key",
+      "type": "java.lang.String",
+      "description": "微信商户号对应V3KEY."
+    },
+    {
+      "name": "app.pay.wechat.pay-notify-url",
+      "type": "java.lang.String",
+      "description": "微信付款信息回调地址."
+    },
+    {
+      "name": "app.pay.wechat.refund-notify-url",
+      "type": "java.lang.String",
+      "description": "微信退款信息回调地址."
+    },
+    {
+      "name": "app.pay.wechat.mp-code-return-url",
+      "type": "java.lang.String",
+      "description": "微信公众号获取code的地址."
+    },
+    {
+      "name": "app.pay.wechat.base-domain",
+      "type": "java.lang.String",
+      "description": "微信支付基础域名，形如https://pay.abasecode.com。注意必须是https."
+    }
+  ]
+}

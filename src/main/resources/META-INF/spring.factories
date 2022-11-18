@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.abasecode.opencode.pay.config.AlipayProperties,\
+  com.abasecode.opencode.pay.config.WechatProperties
