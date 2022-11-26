@@ -4,8 +4,15 @@ import com.abasecode.opencode.base.code.CodeException;
 import com.abasecode.opencode.pay.entity.BaseOrder;
 import com.abasecode.opencode.pay.entity.PayType;
 import com.abasecode.opencode.pay.plugin.alipay.AlipayHandler;
+import com.abasecode.opencode.pay.plugin.alipay.entity.CloseOrderParam;
+import com.abasecode.opencode.pay.plugin.alipay.form.AlipayQueryForm;
+import com.abasecode.opencode.pay.plugin.alipay.form.AlipayRefundForm;
 import com.abasecode.opencode.pay.plugin.wechatpay.WechatHandler;
 import com.abasecode.opencode.pay.plugin.wechatpay.entity.*;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.domain.AlipayTradeQueryModel;
+import com.alipay.api.domain.AlipayTradeRefundModel;
+import com.alipay.api.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,10 +34,65 @@ public class BasePay {
     private AlipayHandler alipayHandler;
 
     /**
-     * 支付宝支付
+     * 创建支付单
+     * @param payType 支付类型
+     * @param order 订单
+     * @return 支付响应
+     * @throws AlipayApiException
      */
-    public void createAliPay(){
-        //todo
+    public AlipayTradeWapPayResponse alipayCreate(PayType payType, BaseOrder order) throws AlipayApiException {
+        AlipayTradeWapPayResponse response = alipayHandler.handlerPrepayWap(payType, order);
+        return response;
+    }
+
+    /**
+     * 支付宝查询
+     * @param form
+     * @return
+     * @throws AlipayApiException
+     */
+    public AlipayTradeQueryResponse alipayQuery(AlipayQueryForm form) throws AlipayApiException {
+        AlipayTradeQueryModel model = new AlipayTradeQueryModel();
+        model.setOutTradeNo(form.getOutTradeNo());
+        model.setQueryOptions(form.getQueryOptions());
+        model.setTradeNo(form.getTradeNo());
+        return alipayHandler.queryPay(model);
+    }
+
+    /**
+     * 退款
+     * @param form
+     * @return
+     * @throws AlipayApiException
+     */
+    public AlipayTradeRefundResponse alipayRefund(AlipayRefundForm form) throws AlipayApiException {
+        AlipayTradeRefundModel model = new AlipayTradeRefundModel();
+        model.setOutTradeNo(form.getOutTradeNo());
+        model.setTradeNo(form.getTradeNo());
+        model.setRefundAmount(form.getRefundAmount());
+        model.setRefundReason(form.getRefundReason());
+        model.setOutRequestNo(form.getOutRequestNo());
+        return alipayHandler.refund(model);
+    }
+
+    /**
+     * 退款查询
+     * @param param
+     * @return
+     * @throws AlipayApiException
+     */
+    public AlipayTradeFastpayRefundQueryResponse alipayRefundQuery(AlipayTradeQueryModel param) throws AlipayApiException {
+        return alipayHandler.refundQuery(param);
+    }
+
+    /**
+     * 关闭订单
+     * @param param
+     * @return
+     * @throws AlipayApiException
+     */
+    public AlipayTradeCloseResponse alipayClose(CloseOrderParam param) throws AlipayApiException {
+        return alipayHandler.close(param);
     }
 
 
@@ -42,6 +104,16 @@ public class BasePay {
      */
     public String wechatMpCodeUrl() throws UnsupportedEncodingException {
         return wechatHandler.createJsapiCodeUrl(null);
+    }
+
+    /**
+     * 公众号获取Code的Url
+     * @param state 要传递的参数
+     * @return url
+     * @throws UnsupportedEncodingException
+     */
+    public String wechatMpCodeUrl(String state) throws UnsupportedEncodingException {
+        return wechatHandler.createJsapiCodeUrl(state);
     }
 
     /**
@@ -62,7 +134,7 @@ public class BasePay {
      * @return WechatClientPayParam
      * @throws Exception
      */
-    public WechatClientPayParam createWechatPay(PayType payType, BaseOrder baseOrder, String codeOrOpenId) throws Exception {
+    public WechatClientPayParam wechatPayCreate(PayType payType, BaseOrder baseOrder, String codeOrOpenId) throws Exception {
         switch (payType){
             case WECHAT_JSAPI_MP:
                 return wechatHandler.handlerPrePayJsapiMp(payType, baseOrder, codeOrOpenId);

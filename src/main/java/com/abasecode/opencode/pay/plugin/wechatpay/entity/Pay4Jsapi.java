@@ -56,6 +56,11 @@ public class Pay4Jsapi implements Serializable {
      */
     @JSONField(name = "goods_tag")
     private String goodsTag;
+    /**
+     * 电子发票入口开放标识
+     */
+    @JSONField(name = "support_fapiao")
+    private Boolean invoice;
 
     /**
      * 交易结束时间

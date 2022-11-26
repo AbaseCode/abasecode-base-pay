@@ -21,14 +21,24 @@
       "description": "支付宝公钥."
     },
     {
+      "name": "app.pay.alipay.has-dev",
+      "type": "java.lang.Boolean",
+      "description": "是否开发模式."
+    },
+    {
+      "name": "app.pay.alipay.has-encrypt",
+      "type": "java.lang.Boolean",
+      "description": "是否加密."
+    },
+    {
       "name": "app.pay.alipay.pay-notify-url",
       "type": "java.lang.String",
-      "description": "支付宝通知地址."
+      "description": "支付宝通知地址。可以是完整的https://pay.xxx.com/notify，也可以是/notify（自动带上base-domain部分）."
     },
     {
       "name": "app.pay.alipay.pay-return-url",
       "type": "java.lang.String",
-      "description": "支付宝支付回调地址."
+      "description": "支付宝支付回调地址。可以是完整的https://pay.xxx.com/return，也可以是/return（自动带上base-domain部分）."
     },
     {
       "name": "app.pay.alipay.base-domain",
@@ -98,17 +108,17 @@
     {
       "name": "app.pay.wechat.pay-notify-url",
       "type": "java.lang.String",
-      "description": "微信付款信息回调地址."
+      "description": "微信付款信息回调地址。可以是完整的https://pay.xxx.com/notify，也可以是/notify（自动带上base-domain部分）."
     },
     {
       "name": "app.pay.wechat.refund-notify-url",
       "type": "java.lang.String",
-      "description": "微信退款信息回调地址."
+      "description": "微信退款信息回调地址。可以是完整的https://pay.xxx.com/refund-notify，也可以是/refund-notify（自动带上base-domain部分）."
     },
     {
       "name": "app.pay.wechat.mp-code-return-url",
       "type": "java.lang.String",
-      "description": "微信公众号获取code的地址."
+      "description": "微信公众号获取code的地址。可以是完整的https://pay.xxx.com/return，也可以是/return（自动带上base-domain部分）."
     },
     {
       "name": "app.pay.wechat.base-domain",

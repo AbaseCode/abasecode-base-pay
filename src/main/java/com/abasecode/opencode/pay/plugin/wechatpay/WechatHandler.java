@@ -224,9 +224,11 @@ public class WechatHandler {
                 .setMchid(WechatConstant.wechatMchid)
                 .setDescription(baseOrder.getSubject())
                 .setOutTradeNo(baseOrder.getOutTradeNo())
-                .setTimeExpire(null)
-                .setAttach(baseOrder.getOutTradeNo())
+                .setTimeExpire(baseOrder.getTimeExpire())
+                .setAttach(baseOrder.getAttach())
                 .setNotifyUrl(WechatConstant.wechatPayNotifyUrl)
+                .setGoodsTag(baseOrder.getGoodsTag())
+                .setInvoice(baseOrder.isInvoice())
                 .setAmount(amount)
                 .setPayer(payer);
         return order;

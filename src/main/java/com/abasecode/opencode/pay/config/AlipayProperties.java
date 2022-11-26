@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import static com.abasecode.opencode.pay.util.BaseUtils.getURI;
+
 /**
  * @author Jon
  * e-mail: ijonso123@gmail.com
@@ -35,10 +37,17 @@ public class AlipayProperties implements ApplicationRunner{
         AliConstant.appPrivateKey =this.aliConfigParam().appPrivateKey;
         AliConstant.appPublicKey =this.aliConfigParam().appPublicKey;
         AliConstant.alipayPublicKey =this.aliConfigParam().alipayPublicKey;
+        AliConstant.hasDev = this.aliConfigParam().hasDev;
+        AliConstant.hasEncrypt = this.aliConfigParam().hasEncrypt;
         AliConstant.encryptKey=this.aliConfigParam().encryptKey;
         AliConstant.encryptType=this.aliConfigParam().encryptType;
-        AliConstant.payNotifyUrl= this.aliConfigParam().baseDomain +this.aliConfigParam().payNotifyUrl;
-        AliConstant.payReturnUrl=this.aliConfigParam().baseDomain +this.aliConfigParam().payReturnUrl;
+        AliConstant.payNotifyUrl= getURI(this.aliConfigParam().baseDomain ,this.aliConfigParam().payNotifyUrl);
+        AliConstant.payReturnUrl=getURI(this.aliConfigParam().baseDomain ,this.aliConfigParam().payReturnUrl);
+        if(AliConstant.hasDev){
+            AliConstant.URL_GATEWAY =AliConstant.URL_GATEWAY_ALI_SANDBOX;
+        }else {
+            AliConstant.URL_GATEWAY = AliConstant.URL_GATEWAY_ALI;
+        }
     }
 
     @Setter
@@ -48,6 +57,8 @@ public class AlipayProperties implements ApplicationRunner{
         private String appPrivateKey;
         private String appPublicKey;
         private String alipayPublicKey;
+        private Boolean hasDev;
+        private Boolean hasEncrypt;
         private String payNotifyUrl;
         private String payReturnUrl;
         private String baseDomain;

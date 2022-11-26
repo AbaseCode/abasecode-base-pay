@@ -1,5 +1,6 @@
 package com.abasecode.opencode.pay.plugin.wechatpay.entity;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -18,6 +19,7 @@ public class WechatClientPayParam implements Serializable {
      * string[1,32]
      * 必
      */
+    @JSONField(name = "appId")
     private String appid;
     /**
      * 时间戳 10位数字
@@ -37,6 +39,7 @@ public class WechatClientPayParam implements Serializable {
      * 必
      * 示例值：prepay_id=wx201410272009395522657a690389285100
      */
+    @JSONField(name = "package")
     private String packages;
     /**
      * 签名方式

@@ -4,9 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.abasecode.code</groupId>
+    <groupId>com.abasecode.opencode</groupId>
     <artifactId>abasecode-base-pay</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
+    <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
     <url>https://github.com/abasecode/abasecode-base-pay</url>
@@ -38,6 +39,7 @@
         <commons.version>2.11.0</commons.version>
         <alipay.version>4.34.52.ALL</alipay.version>
         <httpclient.version>4.5.13</httpclient.version>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <developers>
@@ -215,5 +217,4 @@
             </distributionManagement>
         </profile>
     </profiles>
-
 </project>

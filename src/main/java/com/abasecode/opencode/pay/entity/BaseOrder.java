@@ -37,4 +37,26 @@ public class BaseOrder implements Serializable {
      * 商品详情，可空。支付宝或微信均适用
      */
     private List<BaseGoodDetail> details;
+
+    /**
+     * 微信：交易结束时间
+     * 非必须
+     */
+    private String timeExpire;
+    /**
+     * 微信：附加数据
+     * 非必须
+     */
+    private String attach;
+    /**
+     * 微信：单优惠标记
+     * 非必须
+     */
+    private String goodsTag;
+    /**
+     * 微信：电子发票入口开放标识
+     * 非必须
+     */
+    private boolean invoice;
+
 }

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.security.cert.X509Certificate;
 
+import static com.abasecode.opencode.pay.util.BaseUtils.getURI;
+
 /**
  * @author Jon
  * e-mail: ijonso123@gmail.com
@@ -50,7 +52,6 @@ public class WechatProperties implements ApplicationRunner {
         private String mpCodeReturnUrl;
     }
 
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
         WechatConstant.wechatAppAppid = this.wechatConfigParam().appAppid;
@@ -64,9 +65,9 @@ public class WechatProperties implements ApplicationRunner {
         WechatConstant.wechatBaseDomain =this.wechatConfigParam().baseDomain;
         WechatConstant.wechatCertUrl = this.wechatConfigParam().certPath;
         WechatConstant.wechatCertKey = this.wechatConfigParam().certKey;
-        WechatConstant.wechatPayNotifyUrl = WechatConstant.wechatBaseDomain + this.wechatConfigParam().payNotifyUrl;
-        WechatConstant.wechatRefundNotifyUrl = WechatConstant.wechatBaseDomain +  this.wechatConfigParam().refundNotifyUrl;
-        WechatConstant.wechatCodeReturnUrl = WechatConstant.wechatBaseDomain +this.wechatConfigParam(). mpCodeReturnUrl;
+        WechatConstant.wechatPayNotifyUrl = getURI(WechatConstant.wechatBaseDomain , this.wechatConfigParam().payNotifyUrl);
+        WechatConstant.wechatRefundNotifyUrl = getURI(WechatConstant.wechatBaseDomain ,  this.wechatConfigParam().refundNotifyUrl);
+        WechatConstant.wechatCodeReturnUrl =getURI(WechatConstant.wechatBaseDomain,this.wechatConfigParam(). mpCodeReturnUrl);
         WechatConstant.wechatV3key = this.wechatConfigParam().v3key;
         WechatConstant.wechatPrivateKey = WechatUtils.getPrivateKey();
         WechatConstant.wechatSerialNo = WechatUtils.getSerialNumber();

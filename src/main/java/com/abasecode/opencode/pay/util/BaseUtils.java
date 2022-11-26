@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+
 
 /**
  * @author Jon
@@ -20,6 +22,27 @@ import java.util.UUID;
  * url: <a href="https://abasecode.com">AbaseCode.com</a>
  */
 public class BaseUtils {
+
+    /**
+     * 获得可访问网址
+     * @param domain 域名部分，形状如：https://www.abc.com
+     * @param url 网址部分，可以是 /abc.html或者 https://www.abc.com/abc.html
+     * @return 可访问网址
+     */
+    public static String getURI(String domain,String url){
+        final String HTTP="http://";
+        final String HTTPS="https://";
+        final String SLASH ="/";
+        if(url.contains(HTTP) || url.contains(HTTPS)){
+            return url;
+        }
+        if(url.indexOf(SLASH)==0){
+            return domain + url;
+        }
+        return domain + SLASH + url;
+    }
+
+
     /**
      * 从resource读取文件字节
      *
@@ -101,5 +124,14 @@ public class BaseUtils {
      */
     public static String getCurrentUrl(HttpServletRequest request) {
         return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+    }
+
+    /**
+     * 分转元字符串
+     * @param m 分
+     * @return 元
+     */
+    public static String getYuanFromFen(Integer m){
+        return BigDecimal.valueOf(m / 100.00).toString();
     }
 }
