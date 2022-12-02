@@ -4,6 +4,8 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * @author Jon
  * e-mail: ijonso123@gmail.com
@@ -60,5 +62,9 @@ public class AmountRefundReturn {
      */
     private String currency;
 
-    // todo from
+    /**
+     * 退款出资账户及金额
+     */
+    private List<WechatAccount> from;
+
 }

@@ -49,7 +49,7 @@ public class WechatHttp {
             if (statusCode == WechatConstant.STATUS_CODE_OK) {
                 result = EntityUtils.toString(response.getEntity(), "UTF-8");
             }
-            return getTbyResult(t,statusCode, result, t.newInstance());
+            return getTbyResult(t, statusCode, result, t.newInstance());
         } catch (Exception e){
             throw new CodeException("执行http请求失败！");
         }

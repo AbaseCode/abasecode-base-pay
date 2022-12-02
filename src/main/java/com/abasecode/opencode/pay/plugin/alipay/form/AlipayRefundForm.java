@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Jon
@@ -40,4 +41,11 @@ public class AlipayRefundForm implements Serializable {
      * 针对同一次退款请求，如果调用接口失败或异常了，重试时需要保证退款请求号不能变更，防止该笔交易重复退款。支付宝会保证同样的退款请求号多次请求只会退一次。
      */
     private String outRequestNo;
+    /**
+     * 查询选项。
+     * 商户通过上送该参数来定制同步需要额外返回的信息字段，数组格式。支持：
+     * refund_detail_item_list：退款使用的资金渠道；
+     * deposit_back_info：触发银行卡冲退信息通知
+     */
+    private List<String> queryOptions;
 }

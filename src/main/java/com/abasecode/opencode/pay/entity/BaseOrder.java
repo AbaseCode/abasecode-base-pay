@@ -3,6 +3,7 @@ package com.abasecode.opencode.pay.entity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,45 +19,51 @@ import java.util.List;
 public class BaseOrder implements Serializable {
     private static final long serialVersionUID = -1L;
     /**
-     * 订单号
+     * 订单号，32位
      */
+    @NotNull
     private String outTradeNo;
     /**
      * 单价（分）
      */
-    private Integer price;
+    @NotNull
+    private int price;
     /**
      * 总价（分）
      */
-    private Integer amount;
+    @NotNull
+    private int amount;
     /**
      * 商品标题
      */
+    @NotNull
     private String subject;
     /**
      * 商品详情，可空。支付宝或微信均适用
      */
     private List<BaseGoodDetail> details;
-
     /**
-     * 微信：交易结束时间
+     * 交易结束时间。支付宝或微信均适用。
      * 非必须
+     * 格式：yyyy-MM-dd HH:mm:ss
+     * 例如：2022-11-28 11:59:59
+     * 时区为东八区
      */
     private String timeExpire;
     /**
-     * 微信：附加数据
-     * 非必须
+     * 微信，支付宝:公用回传参数，如果请求时传递了该参数，则返回给商户时会回传该参数。
+     * 支付宝只会在同步返回（包括跳转回商户网站）和异步通知时将该参数原样返回。
+     * 本参数必须进行UrlEncode之后才可以发送给支付宝。
+     * 微信只能传128个字节。
      */
-    private String attach;
-    /**
-     * 微信：单优惠标记
-     * 非必须
-     */
-    private String goodsTag;
-    /**
-     * 微信：电子发票入口开放标识
-     * 非必须
-     */
-    private boolean invoice;
+    private String otherParams;
 
+//    /**
+//     * 支付宝部分
+//     */
+//    private BaseOrderAlipay baseOrderAlipay;
+//    /**
+//     * 微信部分
+//     */
+//    private BaseOrderWechat baseOrderWechat;
 }

@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class Pay4Notice implements Serializable {
+public class PayNotice implements Serializable {
     /**
      * 通知ID
      * string[1,36]

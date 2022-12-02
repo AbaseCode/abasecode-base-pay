@@ -2,6 +2,7 @@ package com.abasecode.opencode.pay.plugin.wechatpay;
 
 import com.abasecode.opencode.base.code.CodeException;
 import com.abasecode.opencode.pay.entity.BaseOrder;
+import com.abasecode.opencode.pay.entity.BaseOrderWechat;
 import com.abasecode.opencode.pay.entity.PayType;
 import com.abasecode.opencode.pay.plugin.wechatpay.constant.WechatConstant;
 import com.abasecode.opencode.pay.plugin.wechatpay.entity.*;
@@ -74,7 +75,7 @@ public class WechatHandler {
      * @return ClientPayParam
      * @throws Exception
      */
-    public WechatClientPayParam handlerPrePayJsapiMp(PayType payType, BaseOrder order, String code) throws Exception {
+    public WechatClientPayParam prePayJsapiMp(PayType payType, BaseOrder order, String code) throws Exception {
         AccessToken accessToken = getAccessToken(code);
         Payer payer = new Payer().setOpenid(accessToken.getOpenid());
         return createClientPayParam(payType, order,payer);
@@ -90,7 +91,7 @@ public class WechatHandler {
      * @return ClientPayParam
      * @throws Exception
      */
-    public WechatClientPayParam handlerPrePayJsapiMicro(PayType payType, BaseOrder order, String openId) throws Exception {
+    public WechatClientPayParam prePayJsapiMicro(PayType payType, BaseOrder order, String openId) throws Exception {
         Payer payer = new Payer().setOpenid(openId);
         return createClientPayParam(payType, order,payer);
     }
@@ -101,16 +102,24 @@ public class WechatHandler {
      * @param notice 微信发起的通知
      * @return 通知体
      */
-    public Pay4Notice handlePayNotify(Pay4Notice notice) {
+    public PayNotice payNotify(PayNotice notice) {
         PayNoticeResourceOrigin origin =null;
+        System.out.println("待解密notice："+ notice.toString());
         if(notice!=null){
             if(notice.getEventType().equals(WechatConstant.ORDER_NOTICE_SUCCESS)){
                 String s = WechatUtils.decryptToString(notice.getResource().getAssociatedData(),
                         notice.getResource().getNonce(), notice.getResource().getCiphertext());
+
+                System.out.println("解密结果：");
+                System.out.println(s);
                 origin = JSONObject.parseObject(s, PayNoticeResourceOrigin.class);
+                System.out.println("解密结果封装：");
+                System.out.println(origin.toString());
                 notice.setOrigin(origin);
             }
         }
+        System.out.println("解密后返回：");
+        System.out.println(notice.toString());
         return notice;
     }
 
@@ -118,13 +127,14 @@ public class WechatHandler {
      * 退款流程：发起退款
      * 发起退款并获得退款结果
      * @param outTradeNo 商户订单号
+     * @param outRefundNo 商户退单单号
      * @param reason 退款原因
      * @param refund 退款金额
      * @param total 订单金额
      * @return 退款返回参数
      */
-    public RefundCreateReturn handleRefund(String outTradeNo,String reason,int refund,int total){
-        RefundCreate refundCreate = createRefundParam(outTradeNo, reason,refund,total);
+    public RefundCreateReturn payRefund(String outTradeNo, String outRefundNo, String reason, int refund, int total){
+        RefundCreate refundCreate = createRefundParam(outTradeNo,outRefundNo, reason,refund,total);
         String s = JSON.toJSONString(refundCreate);
         RefundCreateReturn r = WechatHttp.httpPost(WechatConstant.URL_JSAPI_REFUND, s, RefundCreateReturn.class);
         if(r.getStatusCode()!=WechatConstant.STATUS_CODE_OK){
@@ -145,7 +155,7 @@ public class WechatHandler {
      * @param notice 退款通知
      * @return 解密
      */
-    public RefundNotice handleRefundNotify(RefundNotice notice) {
+    public RefundNotice payRefundNotify(RefundNotice notice) {
         RefundNoticeResourceOrigin origin =null;
         if(notice!=null){
             if(notice.getEventType().equals(WechatConstant.REFUND_NOTICE_SUCCESS)){
@@ -164,10 +174,10 @@ public class WechatHandler {
      * @param outTradeNo 订单编号
      * @return 关闭情况
      */
-    public Object handleClosePay(String outTradeNo){
+    public Object payClose(String outTradeNo){
         if(StringUtils.isNotEmpty(outTradeNo)){
             String url = WechatConstant.URL_ORDER_CLOSE.replace("{out_trade_no}", outTradeNo);
-            Pay4Close close= new Pay4Close().setMchid(WechatConstant.wechatMchid);
+            PayClose close= new PayClose().setMchid(WechatConstant.wechatMchid);
             Object o = WechatHttp.httpPost(url, JSON.toJSONString(close), Object.class);
             return o;
         }
@@ -180,13 +190,13 @@ public class WechatHandler {
      * @param outTradeNo 订单编号
      * @return 查询结果
      */
-    public Pay4QueryReturn handlerQueryPay(String outTradeNo){
+    public PayQueryReturn payQuery(String outTradeNo){
         if(StringUtils.isNotEmpty(outTradeNo)){
             String url = WechatConstant.URL_ORDER_QUERY
                     .replace("{out_trade_no}", outTradeNo)
                     .replace("{mchid}",WechatConstant.wechatMchid);
-            Pay4QueryReturn pay4QueryReturn = WechatHttp.httpGet(url, "", Pay4QueryReturn.class);
-            return pay4QueryReturn;
+            PayQueryReturn payQueryReturn = WechatHttp.httpGet(url, "", PayQueryReturn.class);
+            return payQueryReturn;
         }
         throw new CodeException("商户订单号不能为空！");
     }
@@ -197,7 +207,7 @@ public class WechatHandler {
      * @param outRefundNo 退款单号
      * @return 退款内容
      */
-    public RefundQueryReturn handlerQueryRefund(String outRefundNo){
+    public RefundQueryReturn payRefundQuery(String outRefundNo){
         if(StringUtils.isNotEmpty(outRefundNo)){
             String url = WechatConstant.URL_REFUND_QUERY
                     .replace("{out_refund_no}", outRefundNo);
@@ -222,15 +232,29 @@ public class WechatHandler {
         Pay4Jsapi order = new Pay4Jsapi()
                 .setAppid(getAppId(payType))
                 .setMchid(WechatConstant.wechatMchid)
-                .setDescription(baseOrder.getSubject())
                 .setOutTradeNo(baseOrder.getOutTradeNo())
-                .setTimeExpire(baseOrder.getTimeExpire())
-                .setAttach(baseOrder.getAttach())
+                .setDescription(baseOrder.getSubject())
                 .setNotifyUrl(WechatConstant.wechatPayNotifyUrl)
-                .setGoodsTag(baseOrder.getGoodsTag())
-                .setInvoice(baseOrder.isInvoice())
                 .setAmount(amount)
                 .setPayer(payer);
+        if(StringUtils.isNotEmpty(baseOrder.getOtherParams())){
+            order.setAttach(baseOrder.getOtherParams());
+        }
+        if(StringUtils.isNotEmpty(baseOrder.getTimeExpire())){
+            order.setTimeExpire(baseOrder.getTimeExpire());
+        }
+//        if(baseOrder.getBaseOrderWechat()!=null){
+//            BaseOrderWechat baseOrderWechat = baseOrder.getBaseOrderWechat();
+//            order.setInvoice(baseOrderWechat.isInvoice());
+//            if(StringUtils.isNotEmpty(baseOrderWechat.getGoodsTag())){
+//                order.setGoodsTag(baseOrderWechat.getGoodsTag());
+//            }
+//            if(StringUtils.isNotEmpty(baseOrderWechat.getDescription())){
+//                order.setDescription(baseOrderWechat.getDescription());
+//            }
+//        }
+        //todo 其他扩展待加入
+        System.out.println("组装完order："+order.toString());
         return order;
     }
 
@@ -238,18 +262,19 @@ public class WechatHandler {
      * 退款流程，参数封装
      * 生成退款信息
      * @param outTradeNo
+     * @param outRefundNo
      * @param reason
      * @param refund
      * @param total
      * @return RefundCreate
      */
-    private RefundCreate createRefundParam(String outTradeNo, String reason, int refund, int total){
+    private RefundCreate createRefundParam(String outTradeNo,String outRefundNo, String reason, int refund, int total){
         AmountRefund amount = new AmountRefund()
                 .setRefund(refund)
                 .setTotal(total)
                 .setCurrency(WechatConstant.CURRENCY);
         RefundCreate refundCreate = new RefundCreate()
-                .setOutRefundNo(BaseUtils.getOrderNo())
+                .setOutRefundNo(outRefundNo)
                 .setAmount(amount)
                 .setNotifyUrl(WechatConstant.wechatRefundNotifyUrl)
                 .setOutTradeNo(outTradeNo)
@@ -314,6 +339,8 @@ public class WechatHandler {
         String appId =getAppId(payType);
         Pay4Jsapi pay4Jsapi = createJsapiOrderParams(payType,baseOrder,payer);
         String s = JSON.toJSONString(pay4Jsapi);
+        System.out.println("******************");
+        System.out.println("准备向微信发起的参数："+s);
         Pay4JsapiReturn r = WechatHttp.httpPost(WechatConstant.URL_JSAPI_ORDER, s, Pay4JsapiReturn.class);
         WechatClientPayParam param = new WechatClientPayParam()
                 .setAppid(appId)
@@ -323,6 +350,7 @@ public class WechatHandler {
                 .setSignType(WechatConstant.SIGN_TYPE);
         String jsapiSign = WechatHttp.getJsapiSign(appId,param.getTimeStamp(), param.getNonceStr(), param.getPackages());
         param.setPaySign(jsapiSign);
+        System.out.println("支付参数："+ param.toString());
         return param;
     }
 

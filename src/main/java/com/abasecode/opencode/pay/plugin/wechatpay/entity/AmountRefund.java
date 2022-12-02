@@ -30,7 +30,7 @@ public class AmountRefund implements Serializable {
 
     /**
      * 原订单金额
-     * int
+     * long
      * 必
      */
     private int total;

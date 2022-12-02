@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Jon
@@ -87,6 +88,9 @@ public class RefundQueryReturn implements Serializable {
      * 金额详细信息
      * 必
      */
-    private AmountRefundQueryReturn amount;
-
+    private AmountRefundReturn amount;
+    /**
+     * 优惠退款信息
+     */
+    private List<WechatPromotion> promotionDetail;
 }

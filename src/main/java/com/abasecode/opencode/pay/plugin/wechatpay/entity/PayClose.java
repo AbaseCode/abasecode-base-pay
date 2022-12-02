@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class Pay4Close implements Serializable {
+public class PayClose implements Serializable {
     private static final long serialVersionUID = 1L;
     private String mchid;
 }

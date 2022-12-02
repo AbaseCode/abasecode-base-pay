@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class Pay4QueryReturn implements Serializable {
+public class PayQueryReturn implements Serializable {
     /**
      * 应用ID
      * string[1,32]
@@ -97,5 +97,14 @@ public class Pay4QueryReturn implements Serializable {
      * 否
      */
     private AmountQueryReturn amount;
+
+    /**
+     * 执行代码，0表示成功，非0失败
+     */
+    private int code;
+    /**
+     * 执行的情况
+     */
+    private String msg;
 
 }

@@ -31,7 +31,7 @@ public class BaseGoodDetail implements Serializable {
     /**
      * 商品价格(分)
      */
-    private Integer price;
+    private int price;
     /**
      * 商品类目
      */

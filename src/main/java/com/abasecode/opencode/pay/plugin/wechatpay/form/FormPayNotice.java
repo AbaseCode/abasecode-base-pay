@@ -1,7 +1,7 @@
 package com.abasecode.opencode.pay.plugin.wechatpay.form;
 
 
-import com.abasecode.opencode.pay.plugin.wechatpay.entity.Pay4Notice;
+import com.abasecode.opencode.pay.plugin.wechatpay.entity.PayNotice;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -16,6 +16,6 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class FormPay4Notice extends Pay4Notice implements Serializable {
+public class FormPayNotice extends PayNotice implements Serializable {
 
 }

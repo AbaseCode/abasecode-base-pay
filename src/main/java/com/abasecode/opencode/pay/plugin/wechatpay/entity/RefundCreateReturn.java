@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author Jon
@@ -90,6 +91,9 @@ public class RefundCreateReturn extends BaseReturn implements Serializable {
      */
     @JSONField(name = "amount")
     private AmountRefundReturn amount;
-
-    // todo promotion_detail 否
+    /**
+     * 优惠退款信息
+     */
+    @JSONField(name = "promotion_detail")
+    private List<WechatPromotion> promotionDetail;
 }

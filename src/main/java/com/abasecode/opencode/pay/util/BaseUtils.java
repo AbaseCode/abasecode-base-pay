@@ -1,5 +1,6 @@
 package com.abasecode.opencode.pay.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 
 import org.apache.commons.io.IOUtils;
@@ -10,8 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 
 /**
@@ -42,6 +46,28 @@ public class BaseUtils {
         return domain + SLASH + url;
     }
 
+    /**
+     * 从request中获取map
+     * @param request HttpServletRequest
+     * @return map
+     */
+    public static Map<String,String> getRequestMap(HttpServletRequest request) {
+        Map<String, String> params = new HashMap<>();
+        Map requestParams = request.getParameterMap();
+        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
+            String name = (String) iter.next();
+            String[] values = (String[]) requestParams.get(name);
+            String valueStr = "";
+            for (int i = 0; i < values.length; i++) {
+                valueStr = (i == values.length - 1) ? valueStr + values[i]
+                        : valueStr + values[i] + ",";
+            }
+            //乱码解决，这段代码在出现乱码时使用。
+            //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+            params.put(name, valueStr);
+        }
+        return params;
+    }
 
     /**
      * 从resource读取文件字节
@@ -131,7 +157,114 @@ public class BaseUtils {
      * @param m 分
      * @return 元
      */
-    public static String getYuanFromFen(Integer m){
+    public static String getYuanFromFen(Long m){
         return BigDecimal.valueOf(m / 100.00).toString();
+    }
+
+    /**
+     * 分转元字符串(int)
+     * @param m
+     * @return
+     */
+    public static String getYuanFromFen(int m){
+        return BigDecimal.valueOf(m / 100.00).toString();
+    }
+
+    /**
+     * 元字符串转分(long)
+     * @param m 元
+     * @return 分
+     */
+    public static Long getFenFromYuanLong(String m){
+        BigDecimal b = new BigDecimal(m).multiply(BigDecimal.TEN).multiply(BigDecimal.TEN);
+        return Long.parseLong(b.toString());
+    }
+
+    /**
+     * 元字符串转分(int)
+     * @param m
+     * @return
+     */
+    public static int getFenFromYuan(String m){
+        if(StringUtils.isNotBlank(getValue(m))){
+            return new BigDecimal(m).multiply(BigDecimal.valueOf(100)).intValue();
+        }
+        return 0;
+    }
+
+    /**
+     * 格式化日期
+     * @param dateString RFC3339
+     * @return yyyy-MM-dd HH:mm:ss
+     */
+    public static String getDateTimeStringFromRFC3339(String dateString){
+        if(StringUtils.isBlank(dateString)){
+            return "";
+        }
+        LocalDateTime date = LocalDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    /**
+     *
+     * @param d
+     * @return
+     */
+    public static String getDateTimeStringFromRFC3339(Date d){
+        LocalDateTime date = LocalDateTime.parse(d.toString(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    /**
+     *
+     * @param dateString
+     * @return
+     */
+    public static LocalDateTime getDateTimeFromRFC3339(String dateString){
+        if(StringUtils.isBlank(dateString)){
+            return null;
+        }
+        LocalDateTime date = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return date;
+    }
+
+    /**
+     * convert time to RFC3339
+     *
+     * @param date date
+     * @return 2021-01-29T17:05:58+08:00
+     */
+    public static String getRFC3339(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        String formatDate = simpleDateFormat.format(date);
+        return formatDate;
+    }
+
+    /**
+     * convert time to RFC3339 format
+     *
+     * @param datetime format：2021-01-29 17:05:58
+     * @return datetime string
+     */
+    public static String getRFC3339(String datetime) {
+        java.time.format.DateTimeFormatter formatter1 = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        ZoneId shanghaiZoneId = ZoneId.of("Asia/Shanghai");
+        LocalDateTime localDateTime = LocalDateTime.parse(datetime, formatter1);
+        ZonedDateTime zonedDateTime = localDateTime.atZone(shanghaiZoneId);
+        java.time.format.DateTimeFormatter formatter2 = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        String formatDate = zonedDateTime.format(formatter2);
+        return formatDate;
+    }
+
+    /**
+     * 获取字符串值
+     * @param o
+     * @return
+     */
+    public static String getValue(Object o){
+        if(null!=o){
+            return String.valueOf(o);
+        }
+        return "";
     }
 }
