@@ -24,28 +24,28 @@ import static com.abasecode.opencode.pay.util.BaseUtils.getURI;
 @Component
 @Configuration
 @Data
-public class AlipayProperties implements ApplicationRunner{
+public class AlipayProperties implements ApplicationRunner {
     @Bean
     @ConfigurationProperties(prefix = "app.pay.alipay")
-    public AliConfigParam aliConfigParam(){
+    public AliConfigParam aliConfigParam() {
         return new AliConfigParam();
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         AliConstant.appid = this.aliConfigParam().appid;
-        AliConstant.appPrivateKey =this.aliConfigParam().appPrivateKey;
-        AliConstant.appPublicKey =this.aliConfigParam().appPublicKey;
-        AliConstant.alipayPublicKey =this.aliConfigParam().alipayPublicKey;
+        AliConstant.appPrivateKey = this.aliConfigParam().appPrivateKey;
+        AliConstant.appPublicKey = this.aliConfigParam().appPublicKey;
+        AliConstant.alipayPublicKey = this.aliConfigParam().alipayPublicKey;
         AliConstant.hasDev = this.aliConfigParam().hasDev;
         AliConstant.hasEncrypt = this.aliConfigParam().hasEncrypt;
-        AliConstant.encryptKey=this.aliConfigParam().encryptKey;
-        AliConstant.encryptType=this.aliConfigParam().encryptType;
-        AliConstant.payNotifyUrl= getURI(this.aliConfigParam().baseDomain ,this.aliConfigParam().payNotifyUrl);
-        AliConstant.payReturnUrl=getURI(this.aliConfigParam().baseDomain ,this.aliConfigParam().payReturnUrl);
-        if(AliConstant.hasDev){
-            AliConstant.URL_GATEWAY =AliConstant.URL_GATEWAY_ALI_SANDBOX;
-        }else {
+        AliConstant.encryptKey = this.aliConfigParam().encryptKey;
+        AliConstant.encryptType = this.aliConfigParam().encryptType;
+        AliConstant.payNotifyUrl = getURI(this.aliConfigParam().baseDomain, this.aliConfigParam().payNotifyUrl);
+        AliConstant.payReturnUrl = getURI(this.aliConfigParam().baseDomain, this.aliConfigParam().payReturnUrl);
+        if (AliConstant.hasDev) {
+            AliConstant.URL_GATEWAY = AliConstant.URL_GATEWAY_ALI_SANDBOX;
+        } else {
             AliConstant.URL_GATEWAY = AliConstant.URL_GATEWAY_ALI;
         }
     }

@@ -29,45 +29,24 @@ public class BaseUtils {
 
     /**
      * 获得可访问网址
+     *
      * @param domain 域名部分，形状如：https://www.abc.com
-     * @param url 网址部分，可以是 /abc.html或者 https://www.abc.com/abc.html
+     * @param url    网址部分，可以是 /abc.html或者 https://www.abc.com/abc.html
      * @return 可访问网址
      */
-    public static String getURI(String domain,String url){
-        final String HTTP="http://";
-        final String HTTPS="https://";
-        final String SLASH ="/";
-        if(url.contains(HTTP) || url.contains(HTTPS)){
+    public static String getURI(String domain, String url) {
+        final String HTTP = "http://";
+        final String HTTPS = "https://";
+        final String SLASH = "/";
+        if (url.contains(HTTP) || url.contains(HTTPS)) {
             return url;
         }
-        if(url.indexOf(SLASH)==0){
+        if (url.indexOf(SLASH) == 0) {
             return domain + url;
         }
         return domain + SLASH + url;
     }
 
-    /**
-     * 从request中获取map
-     * @param request HttpServletRequest
-     * @return map
-     */
-    public static Map<String,String> getRequestMap(HttpServletRequest request) {
-        Map<String, String> params = new HashMap<>();
-        Map requestParams = request.getParameterMap();
-        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext(); ) {
-            String name = (String) iter.next();
-            String[] values = (String[]) requestParams.get(name);
-            String valueStr = "";
-            for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i]
-                        : valueStr + values[i] + ",";
-            }
-            //乱码解决，这段代码在出现乱码时使用。
-            //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
-            params.put(name, valueStr);
-        }
-        return params;
-    }
 
     /**
      * 从resource读取文件字节
@@ -154,39 +133,43 @@ public class BaseUtils {
 
     /**
      * 分转元字符串
+     *
      * @param m 分
      * @return 元
      */
-    public static String getYuanFromFen(Long m){
+    public static String getYuanFromFen(Long m) {
         return BigDecimal.valueOf(m / 100.00).toString();
     }
 
     /**
      * 分转元字符串(int)
+     *
      * @param m
      * @return
      */
-    public static String getYuanFromFen(int m){
+    public static String getYuanFromFen(int m) {
         return BigDecimal.valueOf(m / 100.00).toString();
     }
 
     /**
      * 元字符串转分(long)
+     *
      * @param m 元
      * @return 分
      */
-    public static Long getFenFromYuanLong(String m){
+    public static Long getFenFromYuanLong(String m) {
         BigDecimal b = new BigDecimal(m).multiply(BigDecimal.TEN).multiply(BigDecimal.TEN);
         return Long.parseLong(b.toString());
     }
 
     /**
      * 元字符串转分(int)
+     *
      * @param m
      * @return
      */
-    public static int getFenFromYuan(String m){
-        if(StringUtils.isNotBlank(getValue(m))){
+    public static int getFenFromYuan(String m) {
+        if (StringUtils.isNotBlank(getValue(m))) {
             return new BigDecimal(m).multiply(BigDecimal.valueOf(100)).intValue();
         }
         return 0;
@@ -194,11 +177,12 @@ public class BaseUtils {
 
     /**
      * 格式化日期
+     *
      * @param dateString RFC3339
      * @return yyyy-MM-dd HH:mm:ss
      */
-    public static String getDateTimeStringFromRFC3339(String dateString){
-        if(StringUtils.isBlank(dateString)){
+    public static String getDateTimeStringFromRFC3339(String dateString) {
+        if (StringUtils.isBlank(dateString)) {
             return "";
         }
         LocalDateTime date = LocalDateTime.parse(dateString, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
@@ -206,22 +190,20 @@ public class BaseUtils {
     }
 
     /**
-     *
      * @param d
      * @return
      */
-    public static String getDateTimeStringFromRFC3339(Date d){
+    public static String getDateTimeStringFromRFC3339(Date d) {
         LocalDateTime date = LocalDateTime.parse(d.toString(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     /**
-     *
      * @param dateString
      * @return
      */
-    public static LocalDateTime getDateTimeFromRFC3339(String dateString){
-        if(StringUtils.isBlank(dateString)){
+    public static LocalDateTime getDateTimeFromRFC3339(String dateString) {
+        if (StringUtils.isBlank(dateString)) {
             return null;
         }
         LocalDateTime date = LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
@@ -259,11 +241,12 @@ public class BaseUtils {
 
     /**
      * 获取字符串值
+     *
      * @param o
      * @return
      */
-    public static String getValue(Object o){
-        if(null!=o){
+    public static String getValue(Object o) {
+        if (null != o) {
             return String.valueOf(o);
         }
         return "";

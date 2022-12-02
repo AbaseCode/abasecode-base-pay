@@ -48,7 +48,6 @@ public class QrCodeUtil {
     private static final int LOGO_HEIGHT = 100;
 
     /**
-     *
      * @param content
      * @param logoPath
      * @return BufferedImage
@@ -78,7 +77,8 @@ public class QrCodeUtil {
 
     /**
      * 添加LOGO
-     * @param source 二维码
+     *
+     * @param source   二维码
      * @param logoPath LOGO路径
      * @throws Exception
      */
@@ -114,6 +114,7 @@ public class QrCodeUtil {
 
     /**
      * 保存
+     *
      * @param content
      * @param logoPath
      * @param destPath
@@ -129,15 +130,15 @@ public class QrCodeUtil {
             filePath.mkdirs();
         }
         String fileName = file.getName();
-        fileName = fileName.substring(0, fileName.indexOf(".")>0?fileName.indexOf("."):fileName.length())
+        fileName = fileName.substring(0, fileName.indexOf(".") > 0 ? fileName.indexOf(".") : fileName.length())
                 + "." + FORMAT.toLowerCase();
-        System.out.println("destPath:"+destPath);
         ImageIO.write(image, FORMAT, new File(destPath));
         return fileName;
     }
 
     /**
      * 生成二维码
+     *
      * @param content
      * @param logoPath
      * @param output
@@ -151,6 +152,7 @@ public class QrCodeUtil {
 
     /**
      * 读取二维码
+     *
      * @param path 路径
      * @return 文本
      * @throws Exception

@@ -49,7 +49,7 @@ public class PayNotify implements Serializable {
      * 退单（支付宝）微信退款返回空，“”
      * 应用id
      */
-    private String appId="";
+    private String appId = "";
     /**
      * 商户号
      * 付款（支付宝，微信）
@@ -78,12 +78,12 @@ public class PayNotify implements Serializable {
      * 付款默认为0
      * 退单（支付宝=refund_fee，微信=refund）
      */
-    private int refundAmount=0;
+    private int refundAmount = 0;
     /**
      * 付款（默认为0.00）
      * 退单（支付宝=refund_fee，微信=refund）
      */
-    private String refundAmountMoney="";
+    private String refundAmountMoney = "";
 
     /**
      * 付款（支付宝，微信）

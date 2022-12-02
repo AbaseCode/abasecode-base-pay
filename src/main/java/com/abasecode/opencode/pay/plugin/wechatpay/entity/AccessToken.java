@@ -19,7 +19,7 @@ public class AccessToken implements Serializable {
     @JsonProperty("access_token")
     private String accessToken;
     @JsonProperty("expires_in")
-    private Long  expiresIn;
+    private Long expiresIn;
     @JsonProperty("refresh_token")
     private String refreshToken;
     private String openid;

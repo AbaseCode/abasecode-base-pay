@@ -18,7 +18,7 @@ public class WechatPromotion implements Serializable {
      * 券ID
      * 券或者立减优惠id
      */
-    @JSONField(name ="promotion_id")
+    @JSONField(name = "promotion_id")
     private String promotionId;
     /**
      * 优惠范围
@@ -43,14 +43,14 @@ public class WechatPromotion implements Serializable {
      * 优惠退款金额
      * 优惠退款金额 小于等于 退款金额，退款金额-代金券或立减优惠退款金额为用户支付的现金，说明详见代金券或立减优惠，单位为分
      */
-    @JSONField(name ="refund_amount")
+    @JSONField(name = "refund_amount")
     private int refundAmount;
 
     /**
      * 商品列表
      * 优惠商品发生退款时返回商品信息
      */
-    @JSONField(name ="goods_detail")
+    @JSONField(name = "goods_detail")
     private List<WechatGoods> goodsDetail;
 
 }

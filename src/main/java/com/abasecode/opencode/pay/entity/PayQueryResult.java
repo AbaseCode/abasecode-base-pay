@@ -24,10 +24,7 @@ public class PayQueryResult implements Serializable {
      * 通道
      */
     private PayChannel payChannel;
-//    /**
-//     * 支付类型
-//     */
-//    private PayType payType;
+
     /**
      * 订单号
      */

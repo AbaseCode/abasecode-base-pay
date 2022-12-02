@@ -1,7 +1,7 @@
 package com.abasecode.opencode.pay.plugin.wechatpay.util;
 
-import com.abasecode.opencode.base.code.CodeException;
 import com.abasecode.opencode.pay.plugin.wechatpay.constant.WechatConstant;
+import com.abasecode.opencode.pay.plugin.wechatpay.constant.WechatMessage;
 import com.abasecode.opencode.pay.plugin.wechatpay.entity.WechatCertificate;
 import com.abasecode.opencode.pay.plugin.wechatpay.entity.WechatEncryptCertificate;
 import com.abasecode.opencode.pay.util.BaseUtils;
@@ -62,6 +62,7 @@ public class WechatUtils {
 
     /**
      * 从证书文件中获取KeyStore
+     *
      * @return KeyStore
      * @throws KeyStoreException
      * @throws CertificateException
@@ -109,6 +110,7 @@ public class WechatUtils {
 
     /**
      * 从私钥文件读取私钥
+     *
      * @param filename
      * @return PrivateKey
      * @throws IOException
@@ -120,29 +122,30 @@ public class WechatUtils {
                     .replace("-----END PRIVATE KEY-----", "")
                     .replaceAll("\\s+", "");
 
-            KeyFactory kf = KeyFactory.getInstance("RSA");
+            KeyFactory kf = KeyFactory.getInstance(WechatConstant.SIGN_TYPE_RSA);
             return kf.generatePrivate(
                     new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKey)));
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("当前Java环境不支持RSA", e);
+            throw new RuntimeException(WechatMessage.WECHAT_EXCEPTION_RSA_ERROR, e);
         } catch (InvalidKeySpecException e) {
-            throw new RuntimeException("无效的密钥格式");
+            throw new RuntimeException(WechatMessage.WECHAT_EXCEPTION_KEY_SPEC_ERROR);
         }
     }
 
     /**
      * 获取平台证书Map
+     *
      * @return map
      * @throws ParseException
      * @throws CertificateException
      */
-    public static Map<String, X509Certificate> refreshCertificate() throws ParseException, CertificateException {
+    public static Map<String, X509Certificate> refreshCertificate() throws Exception {
         JSONObject jsonObject = WechatHttp.httpGet(WechatConstant.URL_CERTIFICATES, "", JSONObject.class);
         List<WechatCertificate> certificateList = JSON.parseArray(jsonObject.getString("data"), WechatCertificate.class);
         WechatCertificate newestCertificate = null;
         Date newestTime = null;
         for (WechatCertificate certificate : certificateList) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat(WechatConstant.DATE_FORMAT_WITH_3339);
             if (newestTime == null) {
                 newestCertificate = certificate;
                 newestTime = formatter.parse(certificate.getEffectiveTime());
@@ -155,7 +158,7 @@ public class WechatUtils {
         }
         WechatEncryptCertificate encryptCertificate = newestCertificate.getWechatEncryptCertificate();
         String publicKey = decryptToString(encryptCertificate.getAssociatedData(), encryptCertificate.getNonce(), encryptCertificate.getCiphertext());
-        CertificateFactory cf = CertificateFactory.getInstance("X509");
+        CertificateFactory cf = CertificateFactory.getInstance(WechatConstant.CERTIFICATE_TYPE);
 
         ByteArrayInputStream inputStream = new ByteArrayInputStream(publicKey.getBytes(StandardCharsets.UTF_8));
         X509Certificate certificate = null;
@@ -174,16 +177,17 @@ public class WechatUtils {
 
     /**
      * 使用v3key进行AES解密
+     *
      * @param associatedData
      * @param nonce
      * @param ciphertext
      * @return 解密字符串
      * @throws GeneralSecurityException
      */
-    public static String decryptToString(String associatedData, String nonce, String ciphertext) {
+    public static String decryptToString(String associatedData, String nonce, String ciphertext) throws Exception {
         try {
             byte[] associatedDataByte = associatedData.getBytes(StandardCharsets.UTF_8);
-            byte[] nonceByte =nonce.getBytes(StandardCharsets.UTF_8);
+            byte[] nonceByte = nonce.getBytes(StandardCharsets.UTF_8);
             byte[] apiV3Key = WechatConstant.wechatV3key.getBytes(StandardCharsets.UTF_8);
             SecretKeySpec key = new SecretKeySpec(apiV3Key, WechatConstant.AES_NAME);
             GCMParameterSpec spec = new GCMParameterSpec(WechatConstant.GCM_LENGTH, nonceByte);
@@ -195,8 +199,8 @@ public class WechatUtils {
             throw new IllegalStateException(e);
         } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
             throw new IllegalArgumentException(e);
-        } catch (Exception e){
-            throw new CodeException("AES解密失败！");
+        } catch (Exception e) {
+            throw new Exception(WechatMessage.WECHAT_EXCEPTION_AES_FAIL);
         }
     }
 }

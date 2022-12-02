@@ -36,7 +36,6 @@ public class BaseOrderAlipay implements Serializable {
     @JSONField(name = "business_params")
     private String businessParams;
     /**
-     *
      * 业务扩展参数
      * 非必须
      */

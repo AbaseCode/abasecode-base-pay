@@ -14,20 +14,22 @@ public enum PayChannel {
     /**
      * 支付宝
      */
-    ALIPAY(1,"ALIPAY"),
+    ALIPAY(1, "ALIPAY"),
     /**
      * 微信支付
      */
-    WECHAT(2,"WECHAT");
+    WECHAT(2, "WECHAT");
     private Integer id;
     private String name;
+
     private PayChannel(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
-    public static PayChannel getChannel(Integer id){
-        for (PayChannel c : PayChannel.values()){
-            if(c.getId().equals(id)){
+
+    public static PayChannel getChannel(Integer id) {
+        for (PayChannel c : PayChannel.values()) {
+            if (c.getId().equals(id)) {
                 return c;
             }
         }

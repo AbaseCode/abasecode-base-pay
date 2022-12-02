@@ -39,6 +39,7 @@
         <commons.version>2.11.0</commons.version>
         <alipay.version>4.34.52.ALL</alipay.version>
         <httpclient.version>4.5.13</httpclient.version>
+        <lang3.version>3.12.0</lang3.version>
         <maven.test.skip>true</maven.test.skip>
     </properties>
 
@@ -59,16 +60,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.abasecode.opencode</groupId>
-            <artifactId>abasecode-base-code</artifactId>
-            <version>${abasecode-base-code.version}</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.abasecode.opencode</groupId>-->
-<!--            <artifactId>abasecode-base-utils</artifactId>-->
-<!--            <version>${abasecode-base-code.version}</version>-->
-<!--        </dependency>-->
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
@@ -77,6 +68,11 @@
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
             <version>${fastjson2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

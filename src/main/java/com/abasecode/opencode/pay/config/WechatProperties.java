@@ -29,13 +29,13 @@ import static com.abasecode.opencode.pay.util.BaseUtils.getURI;
 public class WechatProperties implements ApplicationRunner {
     @Bean
     @ConfigurationProperties(prefix = "app.pay.wechat")
-    public WechatConfigParam wechatConfigParam(){
+    public WechatConfigParam wechatConfigParam() {
         return new WechatConfigParam();
     }
 
     @Getter
     @Setter
-    public static class WechatConfigParam{
+    public static class WechatConfigParam {
         private String appAppid;
         private String microAppid;
         private String mpAppid;
@@ -62,12 +62,12 @@ public class WechatProperties implements ApplicationRunner {
         WechatConstant.wechatMicroSecret = this.wechatConfigParam().microSecret;
 
         WechatConstant.wechatMchid = this.wechatConfigParam().mchid;
-        WechatConstant.wechatBaseDomain =this.wechatConfigParam().baseDomain;
+        WechatConstant.wechatBaseDomain = this.wechatConfigParam().baseDomain;
         WechatConstant.wechatCertUrl = this.wechatConfigParam().certPath;
         WechatConstant.wechatCertKey = this.wechatConfigParam().certKey;
-        WechatConstant.wechatPayNotifyUrl = getURI(WechatConstant.wechatBaseDomain , this.wechatConfigParam().payNotifyUrl);
-        WechatConstant.wechatRefundNotifyUrl = getURI(WechatConstant.wechatBaseDomain ,  this.wechatConfigParam().refundNotifyUrl);
-        WechatConstant.wechatCodeReturnUrl =getURI(WechatConstant.wechatBaseDomain,this.wechatConfigParam(). mpCodeReturnUrl);
+        WechatConstant.wechatPayNotifyUrl = getURI(WechatConstant.wechatBaseDomain, this.wechatConfigParam().payNotifyUrl);
+        WechatConstant.wechatRefundNotifyUrl = getURI(WechatConstant.wechatBaseDomain, this.wechatConfigParam().refundNotifyUrl);
+        WechatConstant.wechatCodeReturnUrl = getURI(WechatConstant.wechatBaseDomain, this.wechatConfigParam().mpCodeReturnUrl);
         WechatConstant.wechatV3key = this.wechatConfigParam().v3key;
         WechatConstant.wechatPrivateKey = WechatUtils.getPrivateKey();
         WechatConstant.wechatSerialNo = WechatUtils.getSerialNumber();

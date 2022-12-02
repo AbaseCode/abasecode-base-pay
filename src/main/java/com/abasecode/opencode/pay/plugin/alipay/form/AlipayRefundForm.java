@@ -21,7 +21,7 @@ public class AlipayRefundForm implements Serializable {
      */
     private String outTradeNo;
     /**
-     *支付宝交易号
+     * 支付宝交易号
      */
     private String tradeNo;
     /**

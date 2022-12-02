@@ -41,40 +41,37 @@ public class BasePay {
     private AlipayHandler alipayHandler;
 
 
-
     /**
      * 聚合支付：发起预支付
+     *
      * @param payChannel 支付通道
-     * @param payType 支付类型
-     * @param order 订单
+     * @param payType    支付类型
+     * @param order      订单
      * @return 预支付信息：支付宝返回前端可调用支付表单，微信返回前端调用的url
      * @throws AlipayApiException
      * @throws UnsupportedEncodingException
      */
     public PrepayResult prepay(PayChannel payChannel, PayType payType, BaseOrder order) throws Exception {
-        checkPayChannelAndType(payChannel,payType);
-        if(null==order){
+        checkPayChannelAndType(payChannel, payType);
+        if (null == order) {
             throw new Exception(PayConstant.MSG_NOT_NULL_ORDER);
         }
         PrepayResult result = new PrepayResult();
-        if(payChannel==PayChannel.ALIPAY){
+        if (payChannel == PayChannel.ALIPAY) {
             AlipayTradeWapPayResponse response = alipayHandler.prepayWap(payType, order);
             result.setPrePayResult(response.getBody());
-            System.out.println(result);
             return result;
         }
-        if(payChannel==PayChannel.WECHAT){
+        if (payChannel == PayChannel.WECHAT) {
             String url;
-            if(payType==PayType.WECHAT_JSAPI_MP){
-                url =wechatHandler.createJsapiCodeUrl(order.getOutTradeNo());
+            if (payType == PayType.WECHAT_JSAPI_MP) {
+                url = wechatHandler.createJsapiCodeUrl(order.getOutTradeNo());
                 result.setPrePayResult(url);
-                System.out.println(result);
                 return result;
             }
-            if(payType==PayType.WECHAT_JSAPI_MICRO){
-                url=wechatHandler.createJsapiOpenIdUrl(order.getOutTradeNo());
+            if (payType == PayType.WECHAT_JSAPI_MICRO) {
+                url = wechatHandler.createJsapiOpenIdUrl(order.getOutTradeNo());
                 result.setPrePayResult(url);
-                System.out.println(result);
                 return result;
             }
         }
@@ -84,25 +81,26 @@ public class BasePay {
 
     /**
      * 聚合支付：获得预支付参数（仅微信）
-     * @param payChannel 通道
-     * @param payType 支付类型
-     * @param order 订单
+     *
+     * @param payChannel   通道
+     * @param payType      支付类型
+     * @param order        订单
      * @param codeOrOpenId code或openId
      * @return
      */
-    public WechatClientPayParam prepayStep2(PayChannel payChannel, PayType payType, BaseOrder order,String codeOrOpenId) throws Exception {
-        checkPayChannelAndType(payChannel,payType);
-        if(null==order){
+    public WechatClientPayParam prepayStep2(PayChannel payChannel, PayType payType, BaseOrder order, String codeOrOpenId) throws Exception {
+        checkPayChannelAndType(payChannel, payType);
+        if (null == order) {
             throw new Exception(PayConstant.MSG_NOT_NULL_ORDER);
         }
-        if(StringUtils.isBlank(codeOrOpenId)){
+        if (StringUtils.isBlank(codeOrOpenId)) {
             throw new Exception(PayConstant.MSG_NOT_NULL_PAY_CODE_OPENID);
         }
-        if(payChannel== PayChannel.WECHAT){
-            if(payType==PayType.WECHAT_JSAPI_MP){
+        if (payChannel == PayChannel.WECHAT) {
+            if (payType == PayType.WECHAT_JSAPI_MP) {
                 return wechatHandler.prePayJsapiMp(payType, order, codeOrOpenId);
             }
-            if(payType==PayType.WECHAT_JSAPI_MICRO){
+            if (payType == PayType.WECHAT_JSAPI_MICRO) {
                 return wechatHandler.prePayJsapiMicro(payType, order, codeOrOpenId);
             }
         }
@@ -111,6 +109,7 @@ public class BasePay {
 
     /**
      * 查询订单
+     *
      * @param form 查询
      * @return 查询结果，返回null表示通道不对
      * @throws Exception
@@ -118,7 +117,7 @@ public class BasePay {
     public PayQueryResult payQuery(PayQueryForm form) throws Exception {
         checkPayChannel(form.getPayChannel());
         PayQueryResult result = new PayQueryResult();
-        if(form.getPayChannel()==PayChannel.ALIPAY){
+        if (form.getPayChannel() == PayChannel.ALIPAY) {
             AlipayTradeQueryModel model = new AlipayTradeQueryModel();
             model.setOutTradeNo(form.getOutTradeNo());
             model.setQueryOptions(form.getQueryOptions());
@@ -127,7 +126,7 @@ public class BasePay {
                     .setPayChannel(form.getPayChannel())
                     .setOutTradeNo(form.getOutTradeNo())
                     .setTradeNo(response.getTradeNo())
-                    .setPayStatus(getPayStatus(form.getPayChannel(),response.getTradeStatus()))
+                    .setPayStatus(getPayStatus(form.getPayChannel(), response.getTradeStatus()))
                     .setTotalAmount(getFenFromYuan(response.getTotalAmount()))
                     .setTotalAmountMoney(response.getTotalAmount())
                     .setPayAmount(getFenFromYuan(response.getBuyerPayAmount()))
@@ -135,16 +134,16 @@ public class BasePay {
                     .setSuccessTime(response.getSendPayDate().toString())
                     .setWechatResult(null);
         }
-        if(form.getPayChannel()==PayChannel.WECHAT){
+        if (form.getPayChannel() == PayChannel.WECHAT) {
             PayQueryReturn response = wechatHandler.payQuery(form.getOutTradeNo());
             result.setWechatResult(response)
                     .setPayChannel(form.getPayChannel())
                     .setOutTradeNo(form.getOutTradeNo())
                     .setTradeNo(response.getTransactionId())
-                    .setPayStatus(getPayStatus(form.getPayChannel(),response.getTradeType()))
-                    .setTotalAmount(Integer.parseInt(response.getAmount().getTotal()+""))
+                    .setPayStatus(getPayStatus(form.getPayChannel(), response.getTradeType()))
+                    .setTotalAmount(Integer.parseInt(response.getAmount().getTotal() + ""))
                     .setTotalAmountMoney(getYuanFromFen(result.getTotalAmount()))
-                    .setPayAmount(Integer.parseInt(response.getAmount().getPayerTotal()+""))
+                    .setPayAmount(Integer.parseInt(response.getAmount().getPayerTotal() + ""))
                     .setPayAmountMoney(getYuanFromFen(result.getPayAmount()))
                     .setSuccessTime(getDateTimeStringFromRFC3339(response.getSuccessTime()))
                     .setAlipayResult(null);
@@ -154,17 +153,14 @@ public class BasePay {
 
     /**
      * 微信支付回调
+     *
      * @param notice
      * @return
      */
-    public PayNotify payNotifyWechat(PayNotice notice){
+    public PayNotify payNotifyWechat(PayNotice notice) throws Exception {
         PayNotice n = wechatHandler.payNotify(notice);
         PayNotify payNotify = new PayNotify();
-        System.out.println("拿到解密后的JSON：");
-        System.out.println(JSONObject.toJSONString(n));
-        System.out.println("准备组装notify");
-        if(n.getEventType().equals(WechatConstant.ORDER_NOTICE_SUCCESS)){
-            System.out.println("组装第一步：");
+        if (n.getEventType().equals(WechatConstant.ORDER_NOTICE_SUCCESS)) {
             payNotify.setCode(0)
                     .setPayChannel(PayChannel.WECHAT)
                     .setStatus(n.getOrigin().getTradeState())
@@ -179,8 +175,6 @@ public class BasePay {
                     .setPayTime(getDateTimeStringFromRFC3339(n.getOrigin().getSuccessTime()))
                     .setNotifyTime(getDateTimeStringFromRFC3339(n.getCreateTime()))
                     .setType(1);
-            System.out.println("组装完成：");
-            System.out.println(payNotify.toString());
         } else {
             payNotify.setCode(-1);
         }
@@ -190,10 +184,10 @@ public class BasePay {
     /**
      * 微信退单回调
      */
-    public PayNotify payRefundNotifyWechat(RefundNotice notice){
+    public PayNotify payRefundNotifyWechat(RefundNotice notice) throws Exception {
         RefundNotice n = wechatHandler.payRefundNotify(notice);
         PayNotify notify = new PayNotify();
-        if(n.getEventType().equals(WechatConstant.REFUND_NOTICE_SUCCESS)){
+        if (n.getEventType().equals(WechatConstant.REFUND_NOTICE_SUCCESS)) {
             notify.setPayChannel(PayChannel.WECHAT)
                     .setStatus(n.getOrigin().getRefundStatus())
                     .setOutTradeNo(n.getOrigin().getOutTradeNo())
@@ -209,7 +203,7 @@ public class BasePay {
                     .setRefundTime(getDateTimeStringFromRFC3339(n.getOrigin().getSuccessTime()))
                     .setCode(0)
                     .setType(2);
-        }else {
+        } else {
             notify.setCode(-1);
         }
         return notify;
@@ -217,6 +211,7 @@ public class BasePay {
 
     /**
      * 支付宝回调：付款和退单同一个
+     *
      * @param maps
      * @return
      * @throws Exception
@@ -226,11 +221,10 @@ public class BasePay {
         return getPayNotify(params);
     }
 
-    private PayNotify getPayNotify(Map<String,String> map) {
+    private PayNotify getPayNotify(Map<String, String> map) {
         PayNotify notify = new PayNotify();
-        System.out.println("组装notify");
         String tradeStatus = map.get("trade_status");
-        if("TRADE_CLOSED".equals(tradeStatus) || "TRADE_SUCCESS".equals(tradeStatus)){
+        if (PayStatus.TRADE_CLOSED.getName().equals(tradeStatus) || PayStatus.TRADE_SUCCESS.getName().equals(tradeStatus)) {
             notify.setPayChannel(PayChannel.ALIPAY)
                     .setStatus(map.get("trade_status"))
                     .setOutTradeNo(map.get("out_trade_no"))
@@ -242,13 +236,13 @@ public class BasePay {
                     .setPayTime(map.get("gmt_payment"))
                     .setNotifyTime(map.get("notify_time"))
                     .setCode(0);
-            if("TRADE_CLOSED".equals(tradeStatus)){
+            if (PayStatus.TRADE_CLOSED.getName().equals(tradeStatus)) {
                 notify.setRefundAmount(getFenFromYuan(map.get("refund_fee")))
                         .setRefundAmountMoney(map.get("refund_fee"))
                         .setRefundTime(map.get("gmt_refund"))
                         .setType(2);
             }
-            if("TRADE_SUCCESS".equals(tradeStatus)){
+            if (PayStatus.TRADE_SUCCESS.getName().equals(tradeStatus)) {
                 notify.setRefundAmount(0)
                         .setRefundAmountMoney("0.00")
                         .setRefundTime("")
@@ -262,43 +256,45 @@ public class BasePay {
 
     /**
      * 关闭订单
+     *
      * @param form 关单参数
      * @throws AlipayApiException
      */
     public void payClose(PayCloseForm form) throws Exception {
         checkPayChannel(form.getPayChannel());
-        if(form.getPayChannel()==PayChannel.ALIPAY){
+        if (form.getPayChannel() == PayChannel.ALIPAY) {
             alipayHandler.payClose(form.getOutTradeNo());
         }
-        if(form.getPayChannel()==PayChannel.WECHAT){
+        if (form.getPayChannel() == PayChannel.WECHAT) {
             wechatHandler.payClose(form.getOutTradeNo());
         }
     }
 
     /**
      * 退单
+     *
      * @param form 退单信息
      * @return 退单结果
      * @throws Exception
      */
     public PayRefundResult payRefund(PayRefundForm form) throws Exception {
         checkPayChannel(form.getPayChannel());
-        if(StringUtils.isBlank(form.getOutRefundNo())){
+        if (StringUtils.isBlank(form.getOutRefundNo())) {
             form.setOutRefundNo(BaseUtils.getOrderNo());
         }
         PayRefundResult result = new PayRefundResult();
-        if(form.getPayChannel()==PayChannel.ALIPAY){
+        if (form.getPayChannel() == PayChannel.ALIPAY) {
             JSONObject bizContent = new JSONObject();
             bizContent.put("out_trade_no", form.getOutTradeNo());
             bizContent.put("refund_amount", getYuanFromFen(form.getRefundAmount()));
-            if(StringUtils.isNotBlank(form.getRefundReason())){
-                bizContent.put("refund_reason",form.getRefundReason());
+            if (StringUtils.isNotBlank(form.getRefundReason())) {
+                bizContent.put("refund_reason", form.getRefundReason());
             }
-            bizContent.put("out_request_no",form.getOutRefundNo());
+            bizContent.put("out_request_no", form.getOutRefundNo());
             AlipayTradeRefundResponse refund = alipayHandler.payRefund(bizContent);
-            if(Objects.equals(refund.getCode(), "10000")){
+            if (Objects.equals(refund.getCode(), "10000")) {
                 result.setStatus(PayConstant.REFUND_STATUS_SUCCESS);
-                PayRefundResultAlipay prra= new PayRefundResultAlipay();
+                PayRefundResultAlipay prra = new PayRefundResultAlipay();
                 prra.setStoreName(refund.getStoreName())
                         .setBuyerUserId(refund.getBuyerUserId())
                         .setSendBackFee(refund.getSendBackFee())
@@ -318,12 +314,12 @@ public class BasePay {
             result.setStatus(refund.getMsg());
 
         }
-        if(form.getPayChannel()==PayChannel.WECHAT){
+        if (form.getPayChannel() == PayChannel.WECHAT) {
             RefundCreateReturn refund = wechatHandler.payRefund(form.getOutTradeNo(), form.getOutRefundNo(),
                     form.getRefundReason(), form.getRefundAmount(), form.getOrderAmount());
-            if(Objects.equals(refund.getCode(), "200")){
+            if (Objects.equals(refund.getCode(), "200")) {
                 result.setStatus(PayConstant.REFUND_STATUS_SUCCESS);
-                PayRefundResultWechat prrw= new PayRefundResultWechat();
+                PayRefundResultWechat prrw = new PayRefundResultWechat();
                 prrw.setAmount(refund.getAmount())
                         .setFundsAccount(refund.getFundsAccount())
                         .setPromotionDetail(refund.getPromotionDetail());
@@ -343,6 +339,7 @@ public class BasePay {
 
     /**
      * 退单查询
+     *
      * @param form 商户退单号
      * @return 退单结果
      */
@@ -352,14 +349,14 @@ public class BasePay {
         result.setPayChannel(form.getPayChannel())
                 .setOutRefundNo(form.getOutRefundNo())
                 .setOutTradeNo(form.getOutTradeNo());
-        if(form.getPayChannel()==PayChannel.ALIPAY){
+        if (form.getPayChannel() == PayChannel.ALIPAY) {
             JSONObject bizContent = new JSONObject();
             bizContent.put("out_trade_no", form.getOutTradeNo());
             bizContent.put("out_request_no", form.getOutRefundNo());
             AlipayTradeFastpayRefundQueryResponse refund = alipayHandler.refundQuery(bizContent);
-            if(Objects.equals(refund.getCode(), "10000")){
+            if (Objects.equals(refund.getCode(), "10000")) {
                 result.setStatus(PayConstant.REFUND_STATUS_SUCCESS);
-                PayRefundResultAlipay prra= new PayRefundResultAlipay();
+                PayRefundResultAlipay prra = new PayRefundResultAlipay();
                 prra.setStoreName("")
                         .setBuyerUserId("")
                         .setSendBackFee(refund.getSendBackFee())
@@ -377,11 +374,11 @@ public class BasePay {
                         .setRefundResultAlipay(prra);
             }
         }
-        if(form.getPayChannel()!=PayChannel.WECHAT){
+        if (form.getPayChannel() != PayChannel.WECHAT) {
             RefundQueryReturn refund = wechatHandler.payRefundQuery(form.getOutRefundNo());
-            if(refund.getStatus().equals(PayConstant.REFUND_STATUS_SUCCESS)){
+            if (refund.getStatus().equals(PayConstant.REFUND_STATUS_SUCCESS)) {
                 result.setStatus(PayConstant.REFUND_STATUS_SUCCESS);
-                PayRefundResultWechat prrw= new PayRefundResultWechat();
+                PayRefundResultWechat prrw = new PayRefundResultWechat();
                 prrw.setAmount(refund.getAmount())
                         .setFundsAccount(refund.getFundsAccount())
                         .setPromotionDetail(refund.getPromotionDetail());
@@ -400,17 +397,16 @@ public class BasePay {
     }
 
 
-
-
     /**
      * 获取支付状态
+     *
      * @param payChannel 支付通道
-     * @param status 状态名称
+     * @param status     状态名称
      * @return 支付状态
      */
-    private PayStatus getPayStatus(PayChannel payChannel,String status){
-        if(payChannel==PayChannel.WECHAT){
-            switch(status){
+    private PayStatus getPayStatus(PayChannel payChannel, String status) {
+        if (payChannel == PayChannel.WECHAT) {
+            switch (status) {
                 case "SUCCESS":
                     return PayStatus.TRADE_SUCCESS;
                 case "REFUND":
@@ -427,8 +423,8 @@ public class BasePay {
                     return PayStatus.UNKNOWN;
             }
         }
-        if(payChannel==PayChannel.ALIPAY){
-            switch(status){
+        if (payChannel == PayChannel.ALIPAY) {
+            switch (status) {
                 case "TRADE_CLOSED":
                     return PayStatus.TRADE_CLOSED;
                 case "TRADE_FINISHED":
@@ -437,8 +433,8 @@ public class BasePay {
                     return PayStatus.TRADE_SUCCESS;
                 case "WAIT_BUYER_PAY":
                     return PayStatus.WAIT_PAY;
-                    default:
-                        return PayStatus.UNKNOWN;
+                default:
+                    return PayStatus.UNKNOWN;
             }
         }
         return PayStatus.UNKNOWN;
@@ -446,15 +442,16 @@ public class BasePay {
 
     /**
      * 校验支付通道和支付类型
+     *
      * @param payChannel 支付通道
-     * @param payType 支付类型
+     * @param payType    支付类型
      * @throws Exception
      */
     private void checkPayChannelAndType(PayChannel payChannel, PayType payType) throws Exception {
-        if(payChannel==null){
+        if (payChannel == null) {
             throw new Exception(PayConstant.MSG_NOT_NULL_PAY_CHANNEL);
         }
-        if(payType==null){
+        if (payType == null) {
             throw new Exception(PayConstant.MSG_NOT_NULL_PAY_TYPE);
         }
 
@@ -462,11 +459,12 @@ public class BasePay {
 
     /**
      * 校验支付通道
+     *
      * @param payChannel
      * @throws Exception
      */
     private void checkPayChannel(PayChannel payChannel) throws Exception {
-        if(payChannel==null){
+        if (payChannel == null) {
             throw new Exception(PayConstant.MSG_NOT_NULL_PAY_CHANNEL);
         }
     }
@@ -474,9 +472,11 @@ public class BasePay {
     private void throwPayChannelException() throws Exception {
         throw new Exception(PayConstant.MSG_PAY_CHANNEL_SUPPORT);
     }
+
     private void throwPayTypeWechatException() throws Exception {
         throw new Exception(PayConstant.MSG_PAY_TYPE_SUPPORT_WECHAT_ONLY);
     }
+
     private void throwPayTypeAlipayException() throws Exception {
         throw new Exception(PayConstant.MSG_PAY_TYPE_SUPPORT_APPLY_ONLY);
     }

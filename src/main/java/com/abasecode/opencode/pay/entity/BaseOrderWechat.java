@@ -29,6 +29,6 @@ public class BaseOrderWechat implements Serializable {
     /**
      * 微信：商品描述
      */
-    private String 	description;
+    private String description;
 
 }

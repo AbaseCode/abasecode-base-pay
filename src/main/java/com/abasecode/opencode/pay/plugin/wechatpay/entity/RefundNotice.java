@@ -28,7 +28,7 @@ public class RefundNotice implements Serializable {
      * string[1,32]
      * 必-
      */
-    @JsonProperty( "create_time")
+    @JsonProperty("create_time")
     private String createTime;
     /**
      * 通知类型
