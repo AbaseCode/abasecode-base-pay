@@ -1,17 +1,17 @@
 package com.abasecode.opencode.pay.entity;
 
-import com.abasecode.opencode.pay.plugin.alipay.entity.RefundChargeInfo;
-import com.abasecode.opencode.pay.plugin.alipay.entity.TradeFundBill;
 import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author Jon
+ * e-mail: ijonso123@gmail.com
  * url: <a href="https://jon.wiki">Jon's blog</a>
+ * url: <a href="https://github.com/abasecode">project github</a>
+ * url: <a href="https://abasecode.com">AbaseCode.com</a>
  */
 @Data
 @Accessors(chain = true)

@@ -132,7 +132,7 @@ public class BasePay {
                     .setTotalAmountMoney(response.getTotalAmount())
                     .setPayAmount(getFenFromYuan(response.getBuyerPayAmount()))
                     .setPayAmountMoney(response.getPayAmount())
-                    .setSuccessTime(getDateTimeStringFromRFC3339(response.getSendPayDate()))
+                    .setSuccessTime(response.getSendPayDate().toString())
                     .setWechatResult(null);
         }
         if(form.getPayChannel()==PayChannel.WECHAT){
@@ -325,12 +325,9 @@ public class BasePay {
                 result.setStatus(PayConstant.REFUND_STATUS_SUCCESS);
                 PayRefundResultWechat prrw= new PayRefundResultWechat();
                 prrw.setAmount(refund.getAmount())
-//                        .setChannel(refund.getChannel())
-//                        .setCreateTime(CodeDateTimeUtils.stringToDate(refund.getCreateTime(),CodeDateTimeUtils.DATE_TIME_PATTERN).toString())
                         .setFundsAccount(refund.getFundsAccount())
                         .setPromotionDetail(refund.getPromotionDetail());
                 result.setPayChannel(form.getPayChannel())
-//                        .setPayType(form.getPayType())
                         .setOutTradeNo(refund.getOutTradeNo())
                         .setTradeNo(refund.getTransactionId())
                         .setRefundNo(refund.getRefundId())
@@ -370,7 +367,6 @@ public class BasePay {
                         .setBuyerLogonId("")
                         .setFundChange("");
                 result.setPayChannel(form.getPayChannel())
-//                        .setPayType(form.getPayType())
                         .setTradeNo(refund.getTradeNo())
                         .setOutTradeNo(refund.getOutTradeNo())
                         .setRefundNo(refund.getTradeNo())
@@ -387,12 +383,9 @@ public class BasePay {
                 result.setStatus(PayConstant.REFUND_STATUS_SUCCESS);
                 PayRefundResultWechat prrw= new PayRefundResultWechat();
                 prrw.setAmount(refund.getAmount())
-//                        .setChannel(refund.getChannel())
-//                        .setCreateTime(CodeDateTimeUtils.stringToDate(refund.getCreateTime(),CodeDateTimeUtils.DATE_TIME_PATTERN).toString())
                         .setFundsAccount(refund.getFundsAccount())
                         .setPromotionDetail(refund.getPromotionDetail());
                 result.setPayChannel(form.getPayChannel())
-//                        .setPayType(form.getPayType())
                         .setOutTradeNo(refund.getOutTradeNo())
                         .setTradeNo(refund.getTransactionId())
                         .setRefundNo(refund.getRefundId())
@@ -406,39 +399,7 @@ public class BasePay {
         return result;
     }
 
-//    private PayNotify getPayNotify(Map<String,String> map) {
-//        PayNotify notify = new PayNotify();
-//        System.out.println("组装notify");
-//        String tradeStatus = map.get("trade_status");
-//        if("TRADE_CLOSED".equals(tradeStatus) || "TRADE_SUCCESS".equals(tradeStatus)){
-//            notify.setPayChannel(PayChannel.ALIPAY)
-//                    .setStatus(map.get("trade_status"))
-//                    .setOutTradeNo(map.get("out_trade_no"))
-//                    .setTradeNo(map.get("trade_no"))
-//                    .setAppId(map.get("app_id"))
-//                    .setSellerId(map.get("seller_id"))
-//                    .setTotalAmount(getFenFromYuan(map.get("total_amount")))
-//                    .setTotalAmountMoney(map.get("total_amount"))
-//                    .setPayTime(map.get("gmt_payment"))
-//                    .setNotifyTime(map.get("notify_time"))
-//                    .setCode(0);
-//            if("TRADE_CLOSED".equals(tradeStatus)){
-//                notify.setRefundAmount(getFenFromYuan(map.get("refund_fee")))
-//                        .setRefundAmountMoney(map.get("refund_fee"))
-//                        .setRefundTime(map.get("gmt_refund"))
-//                        .setType(2);
-//            }
-//            if("TRADE_SUCCESS".equals(tradeStatus)){
-//                notify.setRefundAmount(0)
-//                        .setRefundAmountMoney("0.00")
-//                        .setRefundTime("")
-//                        .setType(1);
-//            }
-//        } else {
-//            notify.setCode(-1);
-//        }
-//        return notify;
-//    }
+
 
 
     /**
@@ -519,242 +480,6 @@ public class BasePay {
     private void throwPayTypeAlipayException() throws Exception {
         throw new Exception(PayConstant.MSG_PAY_TYPE_SUPPORT_APPLY_ONLY);
     }
-
-
-//    /**
-//     * 创建支付单
-//     * @param payType 支付类型
-//     * @param order 订单
-//     * @return 支付响应
-//     * @throws AlipayApiException
-//     */
-//    public AlipayTradeWapPayResponse alipayCreate(PayType payType, BaseOrder order) throws AlipayApiException {
-//        AlipayTradeWapPayResponse response = alipayHandler.handlerPrepayWap(payType, order);
-//        return response;
-//    }
-
-//    /**
-//     * 支付宝查询
-//     * @param form AlipayQueryForm
-//     * @return AlipayTradeQueryResponse
-//     * @throws Exception
-//     */
-//    public AlipayTradeQueryResponse alipayQuery(AlipayQueryForm form) throws Exception {
-//        if(StringUtils.isAllEmpty(form.getTradeNo(),form.getOutTradeNo())){
-//            throw new Exception("支付宝交易号和商户订单号二者不能同时为空。");
-//        }
-//        AlipayTradeQueryModel model = new AlipayTradeQueryModel();
-//        model.setOutTradeNo(form.getOutTradeNo());
-//        model.setQueryOptions(form.getQueryOptions());
-//        model.setTradeNo(form.getTradeNo());
-//        return alipayHandler.queryPay(model);
-//    }
-
-//    /**
-//     * 退款
-//     * @param form AlipayRefundForm
-//     * @return AlipayTradeRefundResponse
-//     * @throws Exception
-//     */
-//    public AlipayTradeRefundResponse alipayRefund(AlipayRefundForm form) throws Exception {
-//        if(StringUtils.isAllEmpty(form.getTradeNo(),form.getOutTradeNo())){
-//            throw new Exception("支付宝交易号和商户订单号二者不能同时为空。");
-//        }
-//        AlipayTradeRefundModel model = new AlipayTradeRefundModel();
-//        model.setOutTradeNo(form.getOutTradeNo());
-//        model.setTradeNo(form.getTradeNo());
-//        model.setRefundAmount(form.getRefundAmount());
-//        model.setRefundReason(form.getRefundReason());
-//        model.setOutRequestNo(form.getOutRequestNo());
-//        model.setQueryOptions(form.getQueryOptions());
-//        return alipayHandler.refund(model);
-//    }
-
-//    /**
-//     * 退款查询
-//     * @param form AlipayRefundQueryForm
-//     * @return AlipayTradeFastpayRefundQueryResponse
-//     * @throws Exception
-//     */
-//    public AlipayTradeFastpayRefundQueryResponse alipayRefundQuery(AlipayRefundQueryForm form) throws Exception {
-//        if(StringUtils.isAllEmpty(form.getTradeNo(),form.getOutTradeNo())){
-//            throw new Exception("支付宝交易号和商户订单号二者不能同时为空。");
-//        }
-//        JSONObject bizContent = new JSONObject();
-//        if(StringUtils.isNotEmpty(form.getTradeNo())){
-//            bizContent.put("trade_no", form.getTradeNo());
-//        }
-//        if(StringUtils.isNotEmpty(form.getOutRequestNo())){
-//            bizContent.put("out_trade_no",form.getOutRequestNo());
-//        }
-//        bizContent.put("out_request_no", form.getOutRequestNo());
-//        if(form.getQueryOptions().size()>0){
-//            JSONArray queryOptions = new JSONArray();
-//            queryOptions.add(form.getQueryOptions());
-//            bizContent.put("query_options", queryOptions);
-//        }
-//        return alipayHandler.refundQuery(bizContent);
-//    }
-
-//    /**
-//     * 关闭订单
-//     * @param form AlipayCloseOrderForm
-//     * @return AlipayTradeCloseResponse
-//     * @throws Exception
-//     */
-//    public AlipayTradeCloseResponse alipayClose(AlipayCloseOrderForm form) throws Exception {
-//        if(StringUtils.isAllEmpty(form.getTradeNo(),form.getOutTradeNo())){
-//            throw new Exception("支付宝交易号和商户订单号二者不能同时为空。");
-//        }
-//        JSONObject bizContent = new JSONObject();
-//        if(StringUtils.isNotBlank(form.getTradeNo())){
-//            bizContent.put("trade_no", form.getTradeNo());
-//        }
-//        if(StringUtils.isNotBlank(form.getOutTradeNo())){
-//            bizContent.put("out_trade_no", form.getOutTradeNo());
-//        }
-//        if(StringUtils.isNotBlank(form.getOperatorId())){
-//            bizContent.put("operator_id", form.getOperatorId());
-//        }
-//        return alipayHandler.closePay(bizContent);
-//    }
-
-
-//    /**
-//     * 公众号获取Code的Url
-//     * 前端获取
-//     * @return url
-//     * @throws UnsupportedEncodingException
-//     */
-//    public String wechatMpCodeUrl() throws UnsupportedEncodingException {
-//        return wechatHandler.createJsapiCodeUrl(null);
-//    }
-
-//    /**
-//     * 公众号获取Code的Url
-//     * @param state 要传递的参数
-//     * @return url
-//     * @throws UnsupportedEncodingException
-//     */
-//    public String wechatMpCodeUrl(String state) throws UnsupportedEncodingException {
-//        if(StringUtils.isEmpty(state)){
-//            throw new CodeException("参数state必须传递！");
-//        }
-//        return wechatHandler.createJsapiCodeUrl(state);
-//    }
-
-//    /**
-//     * 小程序通过Code获取OpenId
-//     * 前端获取
-//     * @param code 前端获取的code
-//     * @return url
-//     */
-//    public String wechatMicroOpenIdUrl(String code){
-//        if(StringUtils.isEmpty(code)){
-//            throw new CodeException("参数code必须传递！");
-//        }
-//        return wechatHandler.createJsapiOpenIdUrl(code);
-//    }
-
-//    /**
-//     * 微信支付
-//     * @param payType 支付类型
-//     * @param baseOrder 订单
-//     * @param codeOrOpenId 公众号必传code，小程序传openId
-//     * @return WechatClientPayParam
-//     * @throws Exception
-//     */
-//    public WechatClientPayParam wechatPayCreate(PayType payType, BaseOrder baseOrder, String codeOrOpenId) throws Exception {
-//        switch (payType){
-//            case WECHAT_JSAPI_MP:
-//                return wechatHandler.handlerPrePayJsapiMp(payType, baseOrder, codeOrOpenId);
-//            case WECHAT_JSAPI_MICRO:
-//                return wechatHandler.handlerPrePayJsapiMicro(payType, baseOrder, codeOrOpenId);
-//                default: throw new CodeException("暂时只支持微信支付");
-//        }
-//    }
-
-//    /**
-//     * 微信通知处理
-//     * @param pay4Notice 原始通知
-//     * @return 解密通知
-//     */
-//    public Pay4Notice wechatPayNotify(Pay4Notice pay4Notice){
-//        return wechatHandler.handlePayNotify(pay4Notice);
-//    }
-
-//    /**
-//     * 微信关闭订单
-//     * @param outTradeNo 订单号
-//     */
-//    public void wechatClose(String outTradeNo){
-//        if(StringUtils.isEmpty(outTradeNo)){
-//            throw new CodeException("参数outTradeNo必须传递！");
-//        }
-//        wechatHandler.handleClosePay(outTradeNo);
-//    }
-
-//    /**
-//     * 微信申请退款（系统自动生成退款单号）
-//     * @param outTradeNo 订单号
-//     * @param outRefundNo 退单号
-//     * @param reason 退款原因
-//     * @param refund 退款金额
-//     * @param total 原订单金额
-//     * @return 退款返回参数
-//     */
-//    public RefundCreateReturn wechatRefund(String outTradeNo,String outRefundNo,String reason,int refund,int total){
-//        if(StringUtils.isEmpty(outTradeNo)){
-//            throw new CodeException("参数outTradeNo必须传递！");
-//        }
-//        if(StringUtils.isEmpty(reason)){
-//            reason = "";
-//        }
-//        if(refund<=0){
-//            throw new CodeException("退款金额必须大于0！");
-//        }
-//        if(total<=0){
-//            throw new CodeException("原订单金额必须大于0！");
-//        }
-//        RefundCreateReturn refundCreateReturn = wechatHandler.handleRefund(outTradeNo,outRefundNo, reason, refund, total);
-//        return refundCreateReturn;
-//    }
-
-//    /**
-//     * 微信退款通知
-//     * @param notice 退款通知
-//     * @return 解密结果
-//     */
-//    public RefundNotice wechatRefundNotify(RefundNotice notice){
-//        RefundNotice refundNotice = wechatHandler.handleRefundNotify(notice);
-//        return refundNotice;
-//    }
-
-//    /**
-//     * 微信查询支付
-//     * @param outTradeNo 支付单号
-//     * @return 查询结果
-//     */
-//    public Pay4QueryReturn wechatQueryPay(String outTradeNo){
-//        if(StringUtils.isEmpty(outTradeNo)){
-//            throw new CodeException("参数outTradeNo必须传递！");
-//        }
-//        Pay4QueryReturn pay4QueryReturn = wechatHandler.handlerQueryPay(outTradeNo);
-//        return pay4QueryReturn;
-//    }
-
-//    /**
-//     * 微信查询退款
-//     * @param returnTradeNo 退款单号
-//     * @return 退款结果
-//     */
-//    public RefundQueryReturn wechatQueryRefund(String returnTradeNo){
-//        if(StringUtils.isEmpty(returnTradeNo)){
-//            throw new CodeException("参数returnTradeNo必须传递！");
-//        }
-//        RefundQueryReturn refundQueryReturn = wechatHandler.handlerQueryRefund(returnTradeNo);
-//        return refundQueryReturn;
-//    }
 
 
 }

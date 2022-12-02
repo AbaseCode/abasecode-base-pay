@@ -7,7 +7,10 @@ import java.util.List;
 
 /**
  * @author Jon
+ * e-mail: ijonso123@gmail.com
  * url: <a href="https://jon.wiki">Jon's blog</a>
+ * url: <a href="https://github.com/abasecode">project github</a>
+ * url: <a href="https://abasecode.com">AbaseCode.com</a>
  */
 public class WechatPromotion implements Serializable {
     private static final long serialVersionUID = -2070743460104004038L;

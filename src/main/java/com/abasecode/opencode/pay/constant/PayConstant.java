@@ -2,7 +2,10 @@ package com.abasecode.opencode.pay.constant;
 
 /**
  * @author Jon
+ * e-mail: ijonso123@gmail.com
  * url: <a href="https://jon.wiki">Jon's blog</a>
+ * url: <a href="https://github.com/abasecode">project github</a>
+ * url: <a href="https://abasecode.com">AbaseCode.com</a>
  */
 public class PayConstant {
     public static final String MSG_NOT_NULL_ORDER ="订单信息不能为空!";

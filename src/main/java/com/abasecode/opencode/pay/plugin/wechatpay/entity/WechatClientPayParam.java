@@ -8,7 +8,10 @@ import java.io.Serializable;
 
 /**
  * @author Jon
+ * e-mail: ijonso123@gmail.com
  * url: <a href="https://jon.wiki">Jon's blog</a>
+ * url: <a href="https://github.com/abasecode">project github</a>
+ * url: <a href="https://abasecode.com">AbaseCode.com</a>
  * JSAPI客户端发起支付需要的参数（小程序，公众号）
  */
 @Data
