@@ -6,7 +6,7 @@
 
     <groupId>com.abasecode.opencode</groupId>
     <artifactId>abasecode-base-pay</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -135,7 +135,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.8</version>
+                        <version>1.6.13</version>
                         <extensions>true</extensions>
                         <executions>
                             <execution>

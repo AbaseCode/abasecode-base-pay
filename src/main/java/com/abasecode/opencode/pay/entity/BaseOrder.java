@@ -24,11 +24,6 @@ public class BaseOrder implements Serializable {
     @NotNull
     private String outTradeNo;
     /**
-     * 单价（分）
-     */
-    @NotNull
-    private int price;
-    /**
      * 总价（分）
      */
     @NotNull
@@ -58,12 +53,4 @@ public class BaseOrder implements Serializable {
      */
     private String otherParams;
 
-//    /**
-//     * 支付宝部分
-//     */
-//    private BaseOrderAlipay baseOrderAlipay;
-//    /**
-//     * 微信部分
-//     */
-//    private BaseOrderWechat baseOrderWechat;
 }
