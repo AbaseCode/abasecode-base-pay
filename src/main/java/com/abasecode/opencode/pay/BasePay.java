@@ -224,7 +224,7 @@ public class BasePay {
     private PayNotify getPayNotify(Map<String, String> map) {
         PayNotify notify = new PayNotify();
         String tradeStatus = map.get("trade_status");
-        if (PayStatus.TRADE_CLOSED.getName().equals(tradeStatus) || PayStatus.TRADE_SUCCESS.getName().equals(tradeStatus)) {
+        if (PayStatus.TRADE_CLOSED.name().equals(tradeStatus) || PayStatus.TRADE_SUCCESS.name().equals(tradeStatus)) {
             notify.setPayChannel(PayChannel.ALIPAY)
                     .setStatus(map.get("trade_status"))
                     .setOutTradeNo(map.get("out_trade_no"))
@@ -236,13 +236,13 @@ public class BasePay {
                     .setPayTime(map.get("gmt_payment"))
                     .setNotifyTime(map.get("notify_time"))
                     .setCode(0);
-            if (PayStatus.TRADE_CLOSED.getName().equals(tradeStatus)) {
+            if (PayStatus.TRADE_CLOSED.name().equals(tradeStatus)) {
                 notify.setRefundAmount(getFenFromYuan(map.get("refund_fee")))
                         .setRefundAmountMoney(map.get("refund_fee"))
                         .setRefundTime(map.get("gmt_refund"))
                         .setType(2);
             }
-            if (PayStatus.TRADE_SUCCESS.getName().equals(tradeStatus)) {
+            if (PayStatus.TRADE_SUCCESS.name().equals(tradeStatus)) {
                 notify.setRefundAmount(0)
                         .setRefundAmountMoney("0.00")
                         .setRefundTime("")
