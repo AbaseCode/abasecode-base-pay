@@ -1,9 +1,10 @@
 package com.abasecode.opencode.pay.entity;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.List;
 

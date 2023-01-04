@@ -2,7 +2,6 @@ package com.abasecode.opencode.pay.config;
 
 import com.abasecode.opencode.pay.plugin.wechatpay.constant.WechatConstant;
 import com.abasecode.opencode.pay.plugin.wechatpay.util.WechatUtils;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.ApplicationArguments;
@@ -10,7 +9,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.security.cert.X509Certificate;

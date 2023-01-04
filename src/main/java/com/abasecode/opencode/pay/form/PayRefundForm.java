@@ -1,11 +1,11 @@
 package com.abasecode.opencode.pay.form;
 
 import com.abasecode.opencode.pay.entity.PayChannel;
-import com.abasecode.opencode.pay.entity.PayType;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 
 /**

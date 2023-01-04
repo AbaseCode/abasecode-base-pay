@@ -1,8 +1,5 @@
 package com.abasecode.opencode.pay.config;
 
-import com.abasecode.opencode.pay.plugin.alipay.constant.AliConstant;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
